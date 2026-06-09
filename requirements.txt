@@ -1,0 +1,49 @@
+# ── LLM (script, scene planning, story brain, visual verifier) ─
+groq                          # free tier: console.groq.com
+
+# ── TTS — runs fully local, no API key ────────────────────────
+kokoro-onnx
+soundfile
+torch                         # CPU-only is fine; see README if GPU errors
+
+# ── Video assembly ─────────────────────────────────────────────
+moviepy==1.0.3
+# Pillow: Previously pinned <10 because of moviepy 1.0.3 TextClip using ANTIALIAS.
+# The codebase now has a compatibility shim (PIL.Image.ANTIALIAS = LANCZOS) in
+# video_maker.py and scene_builder.py, so we can use modern Pillow.
+# Pillow 10+ / 11+ have proper wheels for Python 3.13+.
+Pillow>=9.0.0
+
+# ── Image processing (Ken Burns, PIL subtitle fallback) ────────
+numpy>=1.24.0
+
+# ── Vision verify: video thumbnail extraction ──────────────────
+# opencv-python is optional — if missing, moviepy is used as fallback
+# Install if you want faster/more reliable thumbnail extraction:
+# opencv-python-headless
+
+# ── HTTP & env ─────────────────────────────────────────────────
+requests>=2.31.0
+python-dotenv>=1.0.1
+
+# ── v5 UPGRADES ────────────────────────────────────────────────────────────────
+
+# CLIP Retrieval — semantic embedding ranking (highest ROI upgrade)
+# Choose ONE (or both; clip_ranker.py prefers open_clip if present):
+#
+# Option A — sentence-transformers CLIP (easiest, ~400 MB):
+sentence-transformers>=2.2.0
+#
+# Option B — open_clip_torch (faster, more accurate; requires torch):
+# open_clip_torch
+#
+# Both options include the all-MiniLM-L6-v2 fallback automatically.
+
+# Character Face Embeddings (optional, highest accuracy for character consistency)
+# Uncomment to enable InsightFace level-3 face embeddings:
+# insightface
+# opencv-python-headless   # also needed for InsightFace
+
+# ── Phase 1 additions ─────────────────────────────────────
+pydub                         # Audio Reviewer (volume normalization). Requires ffmpeg on system.
+beautifulsoup4                # Bensound music scraper (lightweight web parsing)
